@@ -1,0 +1,55 @@
+﻿@model List<PeopleWebApp.Models.Person>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<a class="btn btn-info" asp-controller="People" asp-action="Generate">Generate Random People</a>
+
+@if (Model.Count == 0)
+{
+    <br />
+    <br />
+    <h4>No People in Database. Generate new people and save to see them here.</h4>
+}
+
+<div class="row">
+    @foreach (var person in Model)
+    {
+        <div class="column" id="card_cointainer">
+            <div class="card" style="margin:5px">
+                <img src="@person.Image" width="300">
+                <div class="container" style="padding-top: 10px">
+                    <h4><b>@person.FirstName @person.LastName</b></h4>
+                    <p>@person.Email</p>
+                    <p>
+                        @person.StreetNumber @person.StreetName,
+                        <br />
+                        @person.City @person.Postcode,
+                        <br />
+                        @person.State, @person.Country
+                    </p>
+                    <p>
+                        <b>Phone: </b> @person.Phone
+                        <br />
+                        <b>Cell: </b> @person.Cell
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<style>
+    #card_cointainer {
+        padding: 20px;
+    }
+</style>
+
+<script>
+    function refreshPage() {
+        location.reload();
+    }
+
+</script>

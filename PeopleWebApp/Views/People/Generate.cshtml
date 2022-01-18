@@ -1,0 +1,64 @@
+﻿@model List<PeopleWebApp.Models.Person>
+
+@{
+    ViewData["Title"] = "Generate";
+}
+
+<h1>Generate</h1>
+
+<form asp-controller="People" asp-action="Generate" method="post">
+    <span>Number of people to generate: </span>
+    <input type="number" name="numPeople" />
+    <input type="submit" value="Generate" class="btn btn-info" />
+</form>
+
+<a class="btn btn-danger" asp-controller="People" asp-action="Index"> Back To People </a>
+
+@if (Model.Count == 0)
+{
+    <br />
+    <br />
+    <h4>Generate new people by clicking the button above.</h4>
+}
+
+@if (Model.Count > 0)
+{
+    <form asp-controller="People" asp-action="SavePeople" method="post">
+        <input type="submit" class="btn btn-info" value="Save People" style="margin-top:40px">
+    </form>
+}
+
+<div class="row" style="padding-top: 40px">
+    @foreach (var person in Model)
+    {
+        <div class="column" id="card_cointainer">
+            <div class="card" style="margin:5px">
+                <img src="@person.Image" width="300">
+                <div class="container" style="padding-top: 10px">
+                    <h4><b>@person.FirstName @person.LastName</b></h4>
+                    <p>@person.Email</p>
+                    <p>
+                        @person.StreetNumber @person.StreetName,
+                        <br />
+                        @person.City @person.Postcode,
+                        <br />
+                        @person.State, @person.Country
+                    </p>
+                    <p>
+                        <b>Phone: </b> @person.Phone
+                        <br />
+                        <b>Cell: </b> @person.Cell
+                    </p>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<script>
+    function SavePeople() {
+
+    }
+
+</script>
