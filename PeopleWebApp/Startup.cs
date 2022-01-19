@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using PeopleWebApp.Utilities;
 
 namespace PeopleWebApp
 {
@@ -30,8 +31,20 @@ namespace PeopleWebApp
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            string PostgresSQLConnectionString = Environment.GetEnvironmentVariable("DATABASE_URL");
+            string connectionString = null;
+
+            if (string.IsNullOrEmpty(PostgresSQLConnectionString))
+            {
+                connectionString = Configuration.GetConnectionString("DefaultConnection");
+            }
+            else
+            {
+                connectionString = PostgreSQLHandler.ParsePostgresConnectionString(PostgresSQLConnectionString);
+            }
+
             services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
+                options.UseSqlServer(connectionString));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddIdentity<AppUser, IdentityRole>()
