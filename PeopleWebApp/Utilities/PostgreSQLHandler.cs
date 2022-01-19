@@ -21,7 +21,7 @@ namespace PeopleWebApp.Utilities
             var pgHost = pgHostPort.Split(":")[0];
             var pgPort = pgHostPort.Split(":")[1];
 
-            var connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}";
+            var connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb};SSL Mode=Require;TrustServerCertificate=True;";
 
             return connectionString;
         }
