@@ -37,14 +37,16 @@ namespace PeopleWebApp
             if (string.IsNullOrEmpty(PostgresSQLConnectionString))
             {
                 connectionString = Configuration.GetConnectionString("DefaultConnection");
+                services.AddDbContext<AppDbContext>(options =>
+                options.UseSqlServer(connectionString));
             }
             else
             {
                 connectionString = PostgreSQLHandler.ParsePostgresConnectionString(PostgresSQLConnectionString);
+                services.AddDbContext<AppDbContext>(options =>
+                options.UseNpgsql(connectionString));
             }
 
-            services.AddDbContext<AppDbContext>(options =>
-                options.UseSqlServer(connectionString));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
 
             services.AddIdentity<AppUser, IdentityRole>()
