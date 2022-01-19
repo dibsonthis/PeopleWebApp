@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using PeopleWebApp.Data;
 using PeopleWebApp.Models;
@@ -6,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace PeopleWebApp.Controllers
@@ -15,15 +18,19 @@ namespace PeopleWebApp.Controllers
         public static List<Person> lastCreatedPeople = new List<Person>();
 
         private readonly AppDbContext _context;
-        public PeopleController(AppDbContext context)
+        private readonly UserManager<AppUser> _userManager;
+
+        public PeopleController(AppDbContext context, UserManager<AppUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         public async Task UpdateDB(List<Person> people)
         {
-            _context.People.RemoveRange(_context.People.ToList());
-            await _context.Database.ExecuteSqlRawAsync("DBCC CHECKIDENT('People',RESEED,1);"); // reset ID when clearing the table
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            _context.People.RemoveRange(await _context.People.Where(o => o.AppUserID == userId).ToListAsync());
 
             foreach (Person person in people)
             {
@@ -34,10 +41,12 @@ namespace PeopleWebApp.Controllers
         }
         public async Task<IActionResult> Index()
         {
-            var people = await _context.People.ToListAsync();
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var people = await _context.People.Where(o => o.AppUserID == userId).ToListAsync();
             return View(people);
         }
 
+        [Authorize]
         public IActionResult Generate()
         {
             return View(new List<Person>());
@@ -47,6 +56,16 @@ namespace PeopleWebApp.Controllers
         public async Task<IActionResult> Generate(int numPeople)
         {
             var people = await PeopleGenerator.GetRandomPeople(numPeople);
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            int personID = 1;
+
+            foreach (var person in people)
+            {
+                person.AppUserID = userId;
+                person.PersonId = personID;
+                personID++;
+            }
+
             lastCreatedPeople = people;
             return View(people);
         }
@@ -55,7 +74,21 @@ namespace PeopleWebApp.Controllers
         public async Task<IActionResult> SavePeople()
         {
             await UpdateDB(lastCreatedPeople);
-            return View("Index", lastCreatedPeople);
+            return RedirectToAction("Index");
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Details(int id)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var person = await _context.People.Where(o => (o.PersonId == id) && o.AppUserID == userId).FirstOrDefaultAsync();
+
+            if (person == null)
+            {
+                return View();
+            }
+
+            return View(person);
         }
     }
 }

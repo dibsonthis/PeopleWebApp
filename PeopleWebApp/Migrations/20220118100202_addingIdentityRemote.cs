@@ -2,7 +2,7 @@
 
 namespace PeopleWebApp.Migrations
 {
-    public partial class initial_migration : Migration
+    public partial class addingIdentityRemote : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {

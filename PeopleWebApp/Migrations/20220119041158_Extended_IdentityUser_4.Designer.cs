@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PeopleWebApp.Data;
 
 namespace PeopleWebApp.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220119041158_Extended_IdentityUser_4")]
+    partial class Extended_IdentityUser_4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -222,7 +224,7 @@ namespace PeopleWebApp.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("AppUserID")
+                    b.Property<string>("AppUserId")
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<string>("Cell")
@@ -252,9 +254,6 @@ namespace PeopleWebApp.Migrations
                     b.Property<string>("LastName")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("PersonId")
-                        .HasColumnType("int");
-
                     b.Property<string>("Phone")
                         .HasColumnType("nvarchar(max)");
 
@@ -272,7 +271,7 @@ namespace PeopleWebApp.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserID");
+                    b.HasIndex("AppUserId");
 
                     b.ToTable("People");
                 });
@@ -330,9 +329,11 @@ namespace PeopleWebApp.Migrations
 
             modelBuilder.Entity("PeopleWebApp.Models.Person", b =>
                 {
-                    b.HasOne("PeopleWebApp.Models.AppUser", null)
+                    b.HasOne("PeopleWebApp.Models.AppUser", "AppUser")
                         .WithMany("People")
-                        .HasForeignKey("AppUserID");
+                        .HasForeignKey("AppUserId");
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("PeopleWebApp.Models.AppUser", b =>

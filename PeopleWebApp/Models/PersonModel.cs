@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,6 +10,7 @@ namespace PeopleWebApp.Models
     public class Person
     {
         public int Id { get; set; }
+        public int PersonId { get; set; }
         public string Gender { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
@@ -22,7 +24,9 @@ namespace PeopleWebApp.Models
         public string Phone { get; set; }
         public string Cell { get; set; }
         public DateTime DOB { get; set; }
-        public string Image { get; set; }
+        public string Image { get; set; }  
+        
+        public string AppUserID { get; set; }
 
         public Person() { }
         public Person(Result result)

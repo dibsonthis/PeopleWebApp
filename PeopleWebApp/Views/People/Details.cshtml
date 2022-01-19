@@ -1,0 +1,37 @@
+﻿@model PeopleWebApp.Models.Person
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<h1>Details</h1>
+
+@if (Model == null)
+{
+    <h2>No Details Found</h2>
+}
+else
+{
+<div class="card" style="margin:5px; width:auto">
+    <img src="@Model.Image" width="600">
+    <div class="container" style="padding-top: 10px">
+        <h4><b>@Model.FirstName @Model.LastName</b></h4>
+        <p>@Model.Email</p>
+        <p>
+            @Model.StreetNumber @Model.StreetName,
+            <br />
+            @Model.City @Model.Postcode,
+            <br />
+            @Model.State, @Model.Country
+        </p>
+        <p>
+            <b>Phone: </b> @Model.Phone
+            <br />
+            <b>Cell: </b> @Model.Cell
+        </p>
+    </div>
+</div>
+}
+
+<a class="btn btn-info" asp-controller="People" asp-action="Index" style="margin-top: 5px; margin-bottom: 15px">Back To People</a>
+

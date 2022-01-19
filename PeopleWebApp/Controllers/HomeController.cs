@@ -20,7 +20,7 @@ namespace PeopleWebApp.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "People");
         }
 
         public IActionResult Privacy()
