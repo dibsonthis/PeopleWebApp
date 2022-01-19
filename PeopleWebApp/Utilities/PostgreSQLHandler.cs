@@ -9,23 +9,19 @@ namespace PeopleWebApp.Utilities
     {
         public static string ParsePostgresConnectionString(string PostgresConnectionString)
         {
-            var uri = new Uri(PostgresConnectionString);
+            PostgresConnectionString = PostgresConnectionString.Replace("postgres://", string.Empty);
 
-            var username = uri.UserInfo.Split(':')[0];
+            var pgUserPass = PostgresConnectionString.Split("@")[0];
+            var pgHostPortDb = PostgresConnectionString.Split("@")[1];
+            var pgHostPort = pgHostPortDb.Split("/")[0];
 
-            var password = uri.UserInfo.Split(':')[1];
+            var pgDb = pgHostPortDb.Split("/")[1];
+            var pgUser = pgUserPass.Split(":")[0];
+            var pgPass = pgUserPass.Split(":")[1];
+            var pgHost = pgHostPort.Split(":")[0];
+            var pgPort = pgHostPort.Split(":")[1];
 
-            var connectionString =
-
-            "; Database=" + uri.AbsolutePath.Substring(1) +
-
-            "; Username=" + username +
-
-            "; Password=" + password +
-
-            "; Port=" + uri.Port +
-
-            "; SSL Mode=Require; Trust Server Certificate=true;";
+            var connectionString = $"Server={pgHost};Port={pgPort};User Id={pgUser};Password={pgPass};Database={pgDb}";
 
             return connectionString;
         }
